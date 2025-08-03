@@ -1,0 +1,22 @@
+{
+    "expectedAssertion":{
+        "newUserSignup":"New User Signup!",
+        "enterAccountInfo":"Enter Account Information",
+        "accountExisted": "Email Address already exist!",
+        "accountCreated": "Account Created",
+        "accountDeleted": "Account Deleted"
+    },
+    "registerData":{
+        "fullName":"Tri Pham",
+        "email":"triphamcypress112233@yopmail.com",
+        "password":"password",
+        "firstName":"Tri",
+        "lastName":"Pham",
+        "address": "test address",
+        "state": "test state",
+        "city": "test city",
+        "zipCode": "test zip code",
+        "phoneNumber": "test Phone Number"
+
+    }
+}
