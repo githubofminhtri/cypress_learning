@@ -53,6 +53,7 @@ jobs:
 
       - name: Merge mochawesome JSON
         run: >
+          mkdir -p cypress/merged
           npx mochawesome-merge "cypress/reports/**/*.json"
           > cypress/merged/merged.json
 
