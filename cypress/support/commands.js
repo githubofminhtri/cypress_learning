@@ -23,43 +23,33 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-Cypress.Commands.add('selectRandomOption',(element) => {
-    cy.get(element).then($select => {
+Cypress.Commands.add('selectRandomDropdownOpt',(element) => {
+    element.then($select => {
         const options = $select.find('option')
         const randomIndex = Math.floor(Math.random() * options.length)
-        const randomOption = options.eq(randomIndex).val()
-        cy.log(randomOption)
-        cy.get(element).select(randomIndex)
+        cy.wrap($select).select(randomIndex)
+    })
+})
+Cypress.Commands.add('selectRandomRadioBtn', (element) => {
+    element.then($select =>{
+        const count = $select.length
+        const randomIndex = Math.floor(Math.random()*count)
+        cy.wrap($select[randomIndex]).click()
     })
 })
 Cypress.Commands.add('login', (email, password) => {
     cy.get('.shop-menu > .nav > :nth-child(4) > a').click()
-    cy.get('[data-qa="login-email"]').type(email)
-    cy.get('[data-qa="login-password"]').type(password)
-    cy.get('form[action="/login"]').submit()
+    
 })
 Cypress.Commands.add('elementVisible',(selector) =>{
-    cy.document().then((document) =>{
-        const $document = Cypress.$(document)
-        const element = $document.find(selector)
-        if(element.length>0){
-            return true
-        }else{
-            return false
-        }
-    })
+    return cy.document().then((doc) => {
+        const $ = Cypress.$;
+        const $el = $(doc).find(selector);
+        return $el.length > 0 && $el.is(':visible'); // <-- just return the value
+    });
 })
-Cypress.Commands.add('deleteAccount',(deletedTxt)=>{
-    cy.get('.shop-menu > .nav > :nth-child(5) > a').click()
-    cy.get('b').should('contain.text',deletedTxt)
-    cy.get('[data-qa="continue-button"]').click()
-})
-Cypress.Commands.add('checkExistedAccount', (email, password, deleted) => {
-    cy.login(email, password)
-    cy.elementVisible(':nth-child(10) > a').then($visible => {
-        if ($visible){
-            cy.deleteAccount(deleted)
-        }
-    })
-    
+
+
+Cypress.Commands.add('assertText', (element, text) => {
+    element.should("contain.text", text)
 })

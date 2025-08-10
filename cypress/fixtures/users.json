@@ -4,7 +4,9 @@
         "enterAccountInfo":"Enter Account Information",
         "accountExisted": "Email Address already exist!",
         "accountCreated": "Account Created",
-        "accountDeleted": "Account Deleted"
+        "accountDeleted": "Account Deleted",
+        "incorrectAccount":"Your email or password is incorrect!",
+        "contactUs":"Get In Touch"
     },
     "registerData":{
         "fullName":"Tri Pham",
@@ -17,6 +19,18 @@
         "city": "test city",
         "zipCode": "test zip code",
         "phoneNumber": "test Phone Number"
-
+    },
+    "loginData":{
+        "email":"triphamcypresslogin112233@yopmail.com",
+        "password":"password",
+        "fullName":"Tri Pham"
+    },
+    "contactUsData":{
+        "name":"Tri Pham",
+        "email":"triphamcypress112233@yopmail.com",
+        "subject":"This is the subject in Contact Us Form",
+        "message":"hahaha this is the message {enter} this is the 2nd line.!!!",
+        "fileName":"cypress/fixtures/env.json",
+        "successfullMsg":"Success! Your details have been submitted successfully."
     }
 }
