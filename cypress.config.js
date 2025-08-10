@@ -7,7 +7,13 @@ module.exports = defineConfig({
     },
     env: {
       baseUrl: 'https://www.automationexercise.com/'
+    },
+    reporter: 'mochawesome',
+    reporterOptions: {
+      reportDir: 'cypress/reports',
+      overwrite: false,
+      html: true,
+      json: true
     }
-  
   },
 });
