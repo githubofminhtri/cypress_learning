@@ -33,8 +33,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           browser: ${{matrix.browser}}
-          # headless: true
-          # command: npm run cy:run
+          command: npm run cy:run
           # start: ''
       - name: Upload screenshots
         if: failure() && steps.cypress.outcome == 'failure'
