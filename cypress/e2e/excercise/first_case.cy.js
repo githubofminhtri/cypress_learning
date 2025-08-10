@@ -66,7 +66,7 @@ describe('Practice', function() {
         signUpOrLoginPage.signUp1stStep(this.testData.registerData.fullName, this.testData.registerData.email, this.testData.expectedAssertion.newUserSignup)
         signUpOrLoginPage.assertSignUpErrMsg(this.testData.expectedAssertion.accountExisted)
     })
-    it.only('Send contact us form', function(){
+    it('Send contact us form', function(){
         homePage.clickContactUsBtn()
         contactUsPage.assertTitle(this.testData.expectedAssertion.contactUs)
         contactUsPage.sendContactUs(this.testData.contactUsData.name, this.testData.contactUsData.email, this.testData.contactUsData.subject,this.testData.contactUsData.message, this.testData.contactUsData.fileName)
