@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "cy:run": "cypress run",
+    "cy:run": "cypress run --spect cypress/e2e/excercise/first_case.cy.js",
     "cy:run:chrome": "cypress run --browser chrome",
     "cy:run:firefox": "cypress run --browser firefox",
     "cy:run:record": "cypress run --record",

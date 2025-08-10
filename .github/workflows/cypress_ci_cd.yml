@@ -8,6 +8,10 @@ on:
 jobs:
   e2e:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false,
+      matrix:
+        browser: [chrome, firefox, edge]
 
     steps:
       - name: Checkout
@@ -23,16 +27,10 @@ jobs:
         run: npm ci
         
       # Run Cypress (auto-installs browsers and xvfb on ubuntu)
-      - name: Cypress run
+      - name: Cypress run on ${{matrix.browser}}
         uses: cypress-io/github-action@v6
         with:
+          browser: ${{matrix.browser}}
+          headless: true
           command: npm run cy:run
-          browser: chrome
-          # If your app already running, tell cypress to not start anything:
           start: ''
-          # wait-on: 'http://localhost:3000'
-          # record: true  # enable if you use Cypress Cloud
-        # env:
-        #   # CYPRESS_BASE_URL overrides baseUrl if needed
-        #   CYPRESS_baseUrl: 'http://localhost:3000'
-        #   # CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
