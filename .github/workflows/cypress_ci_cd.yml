@@ -25,15 +25,23 @@ jobs:
           cache: 'npm'
 
       - name: Install deps
-        run: npm ci
+        run: |
+          npm ci
+          npm i -D mochawesome mochawesome-merge mochawesome-report-generator
         
       # Run Cypress (auto-installs browsers and xvfb on ubuntu)
       - name: Cypress run on ${{matrix.browser}}
         id: cypress
         uses: cypress-io/github-action@v6
         with:
-          command: npx cypress run --spec cypress/e2e/excercise/first_case.cy.js --browser ${{matrix.browser}} --headless
-          # start: ''
+          command: >
+            npx cypress run 
+            --spec cypress/e2e/excercise/first_case.cy.js 
+            --browser ${{matrix.browser}} 
+            --headless
+            --reporter mochawesome
+            --reporter-options "reportDir=cypress/reports/${{matrix.browser}},overwrite=false,html=false,json=true"
+
       - name: Upload screenshots
         if: failure() && steps.cypress.outcome == 'failure'
         uses: actions/upload-artifact@v4
@@ -41,3 +49,23 @@ jobs:
           name: cypress-screenshots-${{matrix.browser}}
           path: cypress/screenshots
           if-no-files-found: ignore
+  # ===================== REPORT MERGE & HTML =====================
+
+      - name: Merge mochawesome JSON
+        run: >
+          npx mochawesome-merge "cypress/reports/**/*.json"
+          > cypress/reports/merged.json
+
+      - name: Generate HTML report
+        run: >
+          npx marge cypress/reports/merged.json
+          -f index -o cypress/reports
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-mochawesome-report
+          path: |
+            cypress/reports/index.html
+            cypress/reports/assets
+          if-no-files-found: error
