@@ -1,0 +1,38 @@
+name: E2E (Cypress)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+        
+      # Run Cypress (auto-installs browsers and xvfb on ubuntu)
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          command: npm run cy:run
+          browser: chrome
+          # If your app already running, tell cypress to not start anything:
+          start: ''
+          # wait-on: 'http://localhost:3000'
+          # record: true  # enable if you use Cypress Cloud
+        # env:
+        #   # CYPRESS_BASE_URL overrides baseUrl if needed
+        #   CYPRESS_baseUrl: 'http://localhost:3000'
+        #   # CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
