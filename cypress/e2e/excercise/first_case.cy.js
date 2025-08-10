@@ -1,46 +1,76 @@
-describe('Practice: Register new account', function() {
-    before('Load fixture date', function(){
-        cy.fixture('users.json').as('testData')
-    })
+import contactUsPage from "../../support/pages/contactUsPage"
+import homePage from "../../support/pages/homePage"
+import signUpOrLoginPage from "../../support/pages/signUpOrLoginPage"
+describe('Practice', function() {
     beforeEach('Go Home Page',function(){
-        cy.visit('https://www.automationexercise.com/')
-        
-        cy.checkExistedAccount(this.testData.registerData.email, this.testData.registerData.password, this.testData.expectedAssertion.accountDeleted)
+        cy.visit(Cypress.env('baseUrl'))
+        cy.fixture('users.json').as('testData')
         
     })
     specify('register a new account with valid information', function(){
-        // Step 1
-        cy.get('.shop-menu > .nav > :nth-child(4) > a').click()
-        cy.get('.signup-form > h2').should('contain.text',this.testData.expectedAssertion.newUserSignup)
-        cy.get('[data-qa="signup-name"]').type(this.testData.registerData.fullName)
-        cy.get('[data-qa="signup-email"]').type(this.testData.registerData.email)
-        cy.get('[data-qa="signup-button"]').click()
-        // Step 2
-        cy.get(':nth-child(1) > b').should('contain.text',this.testData.expectedAssertion.enterAccountInfo)
-        cy.get('.radio-inline').then($genderRadioBtn =>{
-            const count = $genderRadioBtn.length
-            const randomIndex = Math.floor(Math.random()*count)
-            cy.wrap($genderRadioBtn[randomIndex]).click()
+        // Delete account if it is existed
+        signUpOrLoginPage.checkExistedAccount(this.testData.registerData.email, this.testData.registerData.password, this.testData.expectedAssertion.incorrectAccount).then((result)=>{
+            if(result){
+                return
+            }else{
+                homePage.deleteAccount(this.testData.expectedAssertion.accountDeleted)
+            }
         })
-        cy.get('[data-qa="password"]').type(this.testData.registerData.password)
-        cy.selectRandomOption('[data-qa="days"]')
-        cy.selectRandomOption('[data-qa="months"]')
-        cy.selectRandomOption('[data-qa="years"]')
-        cy.get('#newsletter').click()
-        cy.get('#optin').click()
-        cy.get('[data-qa="first_name"]').type(this.testData.registerData.firstName)
-        cy.get('[data-qa="last_name"]').type(this.testData.registerData.lastName)
-        cy.get('[data-qa="address"]').type(this.testData.registerData.address)
-        cy.get('[data-qa="first_name"]').type(this.testData.registerData.firstName)
-        cy.selectRandomOption('#country')
-        cy.get('[data-qa="state"]').type(this.testData.registerData.state)
-        cy.get('[data-qa="city"]').type(this.testData.registerData.city)
-        cy.get('[data-qa="zipcode"]').type(this.testData.registerData.zipCode)
-        cy.get('[data-qa="mobile_number"]').type(this.testData.registerData.phoneNumber)
-        cy.get('form[action="/signup"]').submit()
-        cy.get('b').should('contain.text',this.testData.expectedAssertion.accountCreated)
-        cy.get('[data-qa="continue-button"]').click()
+        // Step 1
+        homePage.clickSignUpOrLoginBtn()
+        signUpOrLoginPage.signUp1stStep(this.testData.registerData.fullName, this.testData.registerData.email, this.testData.expectedAssertion.newUserSignup)
         
-        cy.deleteAccount(this.testData.expectedAssertion.accountDeleted)
+        // Step 2
+        signUpOrLoginPage.signUp2ndStep(this.testData.expectedAssertion.enterAccountInfo,this.testData.registerData.password, this.testData.registerData.firstName, this.testData.registerData.lastName, this.testData.registerData.address, this.testData.registerData.state, this.testData.registerData.city, this.testData.registerData.zipCode, this.testData.registerData.phoneNumber)
+
+        // Step 3
+        signUpOrLoginPage.signUp3rdStep(this.testData.expectedAssertion.accountCreated)
+        
+        homePage.deleteAccount(this.testData.expectedAssertion.accountDeleted)
+    })
+    it('Login with valid credential', function (){
+        signUpOrLoginPage.checkExistedAccount(this.testData.loginData.email, this.testData.loginData.password, this.testData.expectedAssertion.incorrectAccount).then((result)=>{
+            if(result){
+                signUpOrLoginPage.signUpNewAccount(this.testData.loginData.fullName, this.testData.loginData.email, this.testData.expectedAssertion.signUpNewAccount, this.testData.expectedAssertion.enterAccountInfo,this.testData.loginData.password, this.testData.registerData.firstName, this.testData.registerData.lastName, this.testData.registerData.address, this.testData.registerData.state, this.testData.registerData.city, this.testData.registerData.zipCode, this.testData.registerData.phoneNumber, this.testData.expectedAssertion.accountCreated)
+            } else {
+                homePage.clickLogoutBtn()
+            }
+        })
+        signUpOrLoginPage.login(this.testData.loginData.email, this.testData.loginData.password)
+        homePage.deleteAccount(this.testData.expectedAssertion.accountDeleted)
+    })
+    it('Login with invalid credential', function(){
+        homePage.clickSignUpOrLoginBtn()
+        signUpOrLoginPage.login(this.testData.loginData.email, this.testData.loginData.password+1)
+        signUpOrLoginPage.assertLoginErrMsg(this.testData.expectedAssertion.incorrectAccount)
+    })
+    it('Logout user', function(){
+        signUpOrLoginPage.checkExistedAccount(this.testData.loginData.email, this.testData.loginData.password, this.testData.expectedAssertion.incorrectAccount).then((result)=>{
+            if(result){
+                signUpOrLoginPage.signUpNewAccount(this.testData.loginData.fullName, this.testData.loginData.email, this.testData.expectedAssertion.signUpNewAccount, this.testData.expectedAssertion.enterAccountInfo,this.testData.loginData.password, this.testData.registerData.firstName, this.testData.registerData.lastName, this.testData.registerData.address, this.testData.registerData.state, this.testData.registerData.city, this.testData.registerData.zipCode, this.testData.registerData.phoneNumber, this.testData.expectedAssertion.accountCreated)
+            } else {
+                homePage.clickLogoutBtn()
+            }
+        })
+        signUpOrLoginPage.login(this.testData.loginData.email, this.testData.loginData.password)
+        homePage.clickLogoutBtn()
+    })
+    it('Register with existed email', function(){
+        signUpOrLoginPage.checkExistedAccount(this.testData.registerData.email, this.testData.registerData.password, this.testData.expectedAssertion.incorrectAccount).then((result)=>{
+            if(result){
+                signUpOrLoginPage.signUpNewAccount(this.testData.registerData.fullName, this.testData.registerData.email, this.testData.expectedAssertion.signUpNewAccount, this.testData.expectedAssertion.enterAccountInfo,this.testData.registerData.password, this.testData.registerData.firstName, this.testData.registerData.lastName, this.testData.registerData.address, this.testData.registerData.state, this.testData.registerData.city, this.testData.registerData.zipCode, this.testData.registerData.phoneNumber, this.testData.expectedAssertion.accountCreated)
+            } else {
+                homePage.clickLogoutBtn()
+            }
+        })
+        signUpOrLoginPage.signUp1stStep(this.testData.registerData.fullName, this.testData.registerData.email, this.testData.expectedAssertion.newUserSignup)
+        signUpOrLoginPage.assertSignUpErrMsg(this.testData.expectedAssertion.accountExisted)
+    })
+    it.only('Send contact us form', function(){
+        homePage.clickContactUsBtn()
+        contactUsPage.assertTitle(this.testData.expectedAssertion.contactUs)
+        contactUsPage.sendContactUs(this.testData.contactUsData.name, this.testData.contactUsData.email, this.testData.contactUsData.subject,this.testData.contactUsData.message, this.testData.contactUsData.fileName)
+        contactUsPage.assertSuccessfullMsg(this.testData.contactUsData.successfullMsg)
+        contactUsPage.clickHomeBtn()
     })
 })
