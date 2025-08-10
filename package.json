@@ -4,9 +4,6 @@
   "main": "index.js",
   "scripts": {
     "cy:run": "cypress run --spec cypress/e2e/excercise/first_case.cy.js",
-    "cy:run:chrome": "cypress run --browser chrome",
-    "cy:run:firefox": "cypress run --browser firefox",
-    "cy:run:record": "cypress run --record",
     "test": "npm run cy:run"
   },
   "keywords": [],
