@@ -32,7 +32,7 @@ jobs:
         id: cypress
         uses: cypress-io/github-action@v6
         with:
-          command: cypress run --spec cypress/e2e/excercise/first_case.cy.js --browser ${{matrix.browser}} --headless
+          command: npx cypress run --spec cypress/e2e/excercise/first_case.cy.js --browser ${{matrix.browser}} --headless
           # start: ''
       - name: Upload screenshots
         if: failure() && steps.cypress.outcome == 'failure'
