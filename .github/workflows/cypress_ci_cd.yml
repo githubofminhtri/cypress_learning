@@ -54,12 +54,12 @@ jobs:
       - name: Merge mochawesome JSON
         run: >
           mkdir -p cypress/merged
-          npx mochawesome-merge "cypress/reports/**/*.json"
-          > cypress/merged/merged.json
+          npx mochawesome-merge "cypress/reports/*/*.json"
+          > cypress/reports/merged.json
 
       - name: Generate HTML report
         run: >
-          npx marge cypress/merged/merged.json
+          npx marge cypress/reports/merged.json
           -f index -o cypress/reports
 
       - name: Upload HTML report
