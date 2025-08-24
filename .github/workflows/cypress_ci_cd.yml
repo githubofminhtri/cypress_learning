@@ -47,6 +47,13 @@ jobs:
             --reporter mochawesome
             --reporter-options
             "reportDir=cypress/reports/${{ matrix.browser }},overwrite=false,html=false,json=true"
+       
+      - name: Show what reports exist
+        run: |
+          echo "== PWD ==" && pwd
+          echo "== Tree cypress/reports =="
+          ls -R cypress || true
+          ls -R cypress/reports || true
 
       - name: Upload screenshots (on failure)
         if: failure() && steps.cypress.outcome == 'failure'

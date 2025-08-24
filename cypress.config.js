@@ -10,10 +10,11 @@ module.exports = defineConfig({
     },
     reporter: 'mochawesome',
     reporterOptions: {
-      reportDir: 'cypress/reports',
       overwrite: false,
       html: true,
-      json: true
+      json: true,
+      // use an env var from the workflow to switch folder per browser
+      reportDir: process.env.MOCHA_DIR || 'cypress/reports/' 
     }
   },
 });
