@@ -37,6 +37,8 @@ jobs:
       # Run Cypress (auto-installs browsers/xvfb on ubuntu)
       - name: Cypress run on ${{ matrix.browser }}
         id: cypress
+        env:
+          MOCHA_DIR: cypress/reports/${{ matrix.browser }}
         uses: cypress-io/github-action@v6
         with:
           command: >
@@ -44,9 +46,6 @@ jobs:
             --spec cypress/e2e/excercise/first_case.cy.js
             --browser ${{ matrix.browser }}
             --headless
-            --reporter mochawesome
-            --reporter-options
-            "reportDir=cypress/reports/${{ matrix.browser }},overwrite=false,html=false,json=true"
        
       - name: Show what reports exist
         run: |
