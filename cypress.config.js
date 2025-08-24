@@ -9,11 +9,11 @@ module.exports = defineConfig({
       baseUrl: 'https://www.automationexercise.com/'
     },
     reporter: 'mochawesome',
-    // reporterOptions: {
-    //   reportDir: 'cypress/reports',
-    //   overwrite: false,
-    //   html: true,
-    //   json: true
-    // }
+    reporterOptions: {
+      reportDir: 'cypress/reports',
+      overwrite: false,
+      html: true,
+      json: true
+    }
   },
 });
