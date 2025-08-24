@@ -28,7 +28,10 @@ jobs:
         run: |
           npm ci
           npm i -D mochawesome mochawesome-merge mochawesome-report-generator
-        
+      - name: Create report reportDir
+        run: |
+          mkdir -p reports
+          chmod -R 777 reports
       # Run Cypress (auto-installs browsers and xvfb on ubuntu)
       - name: Cypress run on ${{matrix.browser}}
         id: cypress
